@@ -1,0 +1,11 @@
+﻿{
+    "platforms":  {
+                      "windows-x86_64":  {
+                                             "signature":  "Public signature:",
+                                             "url":  "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.1/Nova.Explorer_1.0.1_x64-setup.exe"
+                                         }
+                  },
+    "pub_date":  "2026-06-07T21:24:56Z",
+    "version":  "1.0.1",
+    "notes":  "Added manual Check for Updates button in the title bar."
+}
