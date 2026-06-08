@@ -1,11 +1,11 @@
 {
-  "version": "1.0.12",
-  "notes": "v1.0.12 — Fix embedded terminal crash\n\n• Fixed powershell.exe 0xc0000142 crash — upgraded portable-pty to 0.9\n• Fixed terminal spawning 3 times on open",
-  "pub_date": "2026-06-08T20:00:00Z",
+  "version": "1.0.13",
+  "notes": "v1.0.13 — Fix embedded terminal crash (0xc0000142)\n\n• Replaced portable-pty with direct Windows ConPTY implementation\n• Eliminates STATUS_DLL_INIT_FAILED crash when opening terminal\n• Terminal now spawns reliably using CreatePseudoConsole API directly",
+  "pub_date": "2026-06-08T22:00:00Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlNac3F0SEJpVVIrbytXbktsajFRZW81MUdmZU0wRHZHY2ZCRzcvMkNHZFdyZ3FUZFVIK0lMV0JHWFFxWnh1ZGNhTDhHMHBLdSt2TDNBNEVCenYyVUFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTIwNzg2CWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuMTJfeDY0LXNldHVwLmV4ZQpSMVIyTzFPRnNqTVBxdmtacS9pbXg5RUkvYXUvSTlTZ0FjY2lKVXZpNkNHN0hQOWxiOWJuTzkyK01zS3U0UDAwSVo1azlvSmRDRWdQRzVOd3VhbzlBQT09Cg==",
-      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.12/Nova.Explorer_1.0.12_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlpBYmR3NGt3RVFuelVEMEoxWGJ1eHFLd1ZmcmozVGlzWEd0M25YZWhLZ1JKWGp0QW1QeCs5UU9yd0tPazhucUV4c0VNc0FDSUVabk1QdkVSSWhMM2dZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTIyMjEwCWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuMTNfeDY0LXNldHVwLmV4ZQpuSDhtTlZvQlRJeFBLNFdDeWx3Zlh2TWtTdG1LeE4wVWhqclY2dFMwMUZmUkJyRnNnRFpSVDhGV2JhWklvWUFib3FwWlZieldUM0V4K1dEMkExR21EQT09Cg==",
+      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.13/Nova.Explorer_1.0.13_x64-setup.exe"
     }
   }
 }
