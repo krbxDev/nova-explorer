@@ -20,11 +20,14 @@ export function TerminalPanel() {
   const pane = panes[activePaneId];
   const path = pane?.path ?? "C:\\";
 
-  const containerRef  = useRef<HTMLDivElement>(null);
+  const panelRef      = useRef<HTMLDivElement>(null);   // whole panel
+  const containerRef  = useRef<HTMLDivElement>(null);   // xterm mount point
   const xtermRef      = useRef<XTerm | null>(null);
   const fitAddonRef   = useRef<FitAddon | null>(null);
   const spawnedPathRef = useRef<string | null>(null);
   const unlistenRefs   = useRef<Array<() => void>>([]);
+  // Reliable focus tracking via xterm's own onFocus/onBlur events
+  const xtermFocused  = useRef(false);
 
   const cleanupListeners = () => {
     unlistenRefs.current.forEach((fn) => fn());
@@ -68,27 +71,42 @@ export function TerminalPanel() {
     xtermRef.current    = term;
     fitAddonRef.current = fit;
 
+    // Track xterm focus state reliably via its internal textarea element
+    const onXtermFocus = () => { xtermFocused.current = true; };
+    const onXtermBlur  = () => { xtermFocused.current = false; };
+    term.textarea?.addEventListener("focus", onXtermFocus);
+    term.textarea?.addEventListener("blur",  onXtermBlur);
+
     // ── Key trapping ────────────────────────────────────────────────────
-    // WebView2 intercepts space/arrow keys at the browser level even when a
-    // focused textarea (xterm's input target) is inside. Attaching to window
-    // in the capture phase lets us preventDefault before WebView2 acts on it,
-    // but only when xterm actually holds focus.
+    // WebView2 intercepts space/arrow keys at the C++ browser level before
+    // JavaScript sees them — even with a focused textarea. Attaching to
+    // window in capture phase + calling preventDefault() stops this.
+    // We use xterm's own onFocus/onBlur to know when to intercept.
     const trapKeys = (e: KeyboardEvent) => {
-      if (!TRAPPED_KEYS.has(e.key)) return;
-      // Only intercept when xterm's internal textarea is the active element
-      const xtermEl = xtermRef.current?.element;
-      if (xtermEl && xtermEl.contains(document.activeElement)) {
+      if (!xtermFocused.current) return;
+      if (TRAPPED_KEYS.has(e.key)) {
         e.preventDefault();
+        e.stopPropagation();
       }
     };
     window.addEventListener("keydown", trapKeys, { capture: true });
 
-    // Forward keystrokes → PTY stdin
-    term.onData((data) => { invoke("pty_write", { data }).catch(() => {}); });
+    // Forward keystrokes → PTY stdin (xterm handles translation to ANSI)
+    term.onData((data) => {
+      invoke("pty_write", { data }).catch((err) => {
+        term.writeln(`\r\n\x1b[31m[write error: ${err}]\x1b[0m`);
+      });
+    });
 
-    // Re-focus xterm if the user clicks anywhere inside the terminal panel
-    const refocusOnClick = () => term.focus();
-    containerRef.current.addEventListener("mousedown", refocusOnClick);
+    // ── Focus management ──────────────────────────────────────────────
+    // Click anywhere in the panel → re-focus xterm so input works immediately
+    const onPanelMouseDown = (e: MouseEvent) => {
+      // Don't steal focus from the Close / Pop-out buttons
+      if ((e.target as HTMLElement).closest("button")) return;
+      e.preventDefault();
+      term.focus();
+    };
+    panelRef.current?.addEventListener("mousedown", onPanelMouseDown);
 
     // Resize observer → fit + backend resize
     const ro = new ResizeObserver(() => {
@@ -103,7 +121,10 @@ export function TerminalPanel() {
     return () => {
       ro.disconnect();
       window.removeEventListener("keydown", trapKeys, { capture: true });
-      containerRef.current?.removeEventListener("mousedown", refocusOnClick);
+      panelRef.current?.removeEventListener("mousedown", onPanelMouseDown);
+      term.textarea?.removeEventListener("focus", onXtermFocus);
+      term.textarea?.removeEventListener("blur",  onXtermBlur);
+      xtermFocused.current = false;
       cleanupListeners();
       invoke("pty_kill").catch(() => {});
       term.dispose();
@@ -111,7 +132,7 @@ export function TerminalPanel() {
       fitAddonRef.current  = null;
       spawnedPathRef.current = null;
     };
-  }, [terminalOpen]); // runs only when panel opens/closes
+  }, [terminalOpen]);
 
   // ── Re-spawn when the user navigates to a new folder ────────────────────
   useEffect(() => {
@@ -149,7 +170,7 @@ export function TerminalPanel() {
   if (!terminalOpen) return null;
 
   return (
-    <div className="h-52 border-t border-[var(--border)] bg-[#0d0d0f] flex flex-col shrink-0">
+    <div ref={panelRef} className="h-52 border-t border-[var(--border)] bg-[#0d0d0f] flex flex-col shrink-0">
       {/* Header */}
       <div className="flex items-center justify-between px-3 h-8 border-b border-[var(--border)] bg-[var(--bg-surface)] shrink-0">
         <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
@@ -174,7 +195,7 @@ export function TerminalPanel() {
       </div>
 
       {/* xterm.js */}
-      <div ref={containerRef} tabIndex={0} className="flex-1 overflow-hidden px-1 pt-1" style={{ minHeight: 0, outline: "none" }} />
+      <div ref={containerRef} className="flex-1 overflow-hidden px-1 pt-1" style={{ minHeight: 0 }} />
     </div>
   );
 }

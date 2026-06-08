@@ -1,11 +1,11 @@
 {
-  "version": "1.0.15",
-  "notes": "v1.0.15 — Fix terminal keyboard input\n\n• Space bar, arrow keys, Tab, Page Up/Down now work correctly in the embedded terminal\n• Fixed WebView2 intercepting keys at the browser level before xterm.js receives them\n• Terminal re-focuses automatically when clicked",
-  "pub_date": "2026-06-08T23:00:00Z",
+  "version": "1.0.16",
+  "notes": "v1.0.16 — Fix terminal keyboard input (space/arrows)\n\n• Fixed focus tracking for key interception using xterm's internal textarea events\n• Space bar, arrow keys, Tab, Page Up/Down now reliably reach the terminal\n• Click anywhere in the terminal panel to restore focus",
+  "pub_date": "2026-06-08T23:30:00Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmRlRnJ3Y2EyZHpZMHcyMmZwcENqcFpRM0Z6MUlLVVpFc2pVNG8xWmw1bFpwRkcyMFZGSVJDckVMNzlqUmtHL2ZxaW1QMFkzSU1kY1ZGTlJHTDZ3dUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTIzMjcwCWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuMTVfeDY0LXNldHVwLmV4ZQp3am5qbUlKQUJpcmtyNVdaZmxmZGlTTDZGSm16Y3M3N2NmQkJveEEvVURKKy9PbUNVMkNrejRrNG03MzZJS0VDRVZMOElpWWMyNksvc1BLRTRtVE5Cdz09Cg==",
-      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.15/Nova.Explorer_1.0.15_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlplSUNFOEVRZ0RtVHYzRXMzcTJhSTR6NWlnWmFVNHV0Unh4eklYNjNjV2R2cEgxZjFTQnVLeXphTmcwTlU5NTFqTWswWjZoVkRCNFJKTm43V01rYnd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTI0Nzk4CWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuMTZfeDY0LXNldHVwLmV4ZQpmVzJGTzB1SEFVNThuaFNrV1BHR1ZSWnBqaDVPejdlVmRSb2pHWlN1amk1R1ArQ0pKbTRKc3I3MWl2Ym82RWtNeGw2MStrNm9KL0JidjJaWUtIdkVDUT09Cg==",
+      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.16/Nova.Explorer_1.0.16_x64-setup.exe"
     }
   }
 }
