@@ -44,6 +44,7 @@ interface NovaStore {
   clearSelection: (paneId: string) => void;
   selectAll: (paneId: string) => void;
 
+  folderSortPrefs: Record<string, { key: SortKey; asc: boolean }>;
   setSort: (paneId: string, key: SortKey, asc: boolean) => void;
   setViewMode: (paneId: string, mode: ViewMode) => void;
   setShowHidden: (paneId: string, show: boolean) => void;
@@ -136,11 +137,26 @@ export const useStore = create<NovaStore>()(
     bulkRenameOpen: false,
     diskUsageOpen: false,
     columnWidths: { name: 400, modified: 144, type: 96, size: 80 },
+    folderSortPrefs: {},
 
     navigate: async (paneId, path) => {
       const { ARCHIVE_EXTS } = await import("../lib/utils");
       const ext = path.split(/[\\/]/).pop()?.split(".").pop()?.toLowerCase() ?? "";
       const isArchive = ARCHIVE_EXTS.has(ext) && !path.endsWith("\\") && !path.endsWith("/");
+
+      // Determine sort for this folder:
+      // 1. Saved per-folder pref (user previously changed sort here)
+      // 2. Folder-specific default (Downloads → modified desc)
+      // 3. Carry over pane's current sort
+      const { folderSortPrefs, panes } = get();
+      const basename = path.replace(/\\/g, "/").split("/").filter(Boolean).pop()?.toLowerCase() ?? "";
+      const FOLDER_DEFAULTS: Record<string, { key: SortKey; asc: boolean }> = {
+        downloads: { key: "modified", asc: false },
+      };
+      const resolvedSort: { key: SortKey; asc: boolean } =
+        folderSortPrefs[path] ??
+        FOLDER_DEFAULTS[basename] ??
+        { key: panes[paneId]?.sortKey ?? "name", asc: panes[paneId]?.sortAsc ?? true };
 
       set((s) => {
         const pane = s.panes[paneId];
@@ -148,6 +164,8 @@ export const useStore = create<NovaStore>()(
         pane.loading = true;
         pane.error = null;
         pane.searchQuery = "";
+        pane.sortKey = resolvedSort.key;
+        pane.sortAsc = resolvedSort.asc;
         if (pane.history[pane.historyIndex] !== path) {
           pane.history = pane.history.slice(0, pane.historyIndex + 1);
           pane.history.push(path);
@@ -214,7 +232,7 @@ export const useStore = create<NovaStore>()(
           return;
         }
 
-        entries = await fs.listDirectory(path, pane?.showHidden ?? false, pane?.sortKey, pane?.sortAsc);
+        entries = await fs.listDirectory(path, pane?.showHidden ?? false, resolvedSort.key, resolvedSort.asc);
 
         // Git status (non-blocking, best-effort)
         git.getStatus(path).then((gs) => {
@@ -297,7 +315,13 @@ export const useStore = create<NovaStore>()(
     },
 
     setSort: (paneId, key, asc) => {
-      set((s) => { const p = s.panes[paneId]; p.sortKey = key; p.sortAsc = asc; });
+      set((s) => {
+        const p = s.panes[paneId];
+        p.sortKey = key;
+        p.sortAsc = asc;
+        // Remember this sort for the folder so it persists across navigations
+        if (p.path) s.folderSortPrefs[p.path] = { key, asc };
+      });
       get().refresh(paneId);
     },
     setViewMode: (paneId, mode) => { set((s) => { s.panes[paneId].viewMode = mode; }); },
