@@ -80,9 +80,9 @@ foreach ($tag in $existingTags) {
     & $GH release delete $tag --repo $REPO --yes --cleanup-tag 2>$null
 }
 
-# Create new release
+# Create new release (include installer + latest.json as assets)
 Write-Host "Creating release v$newVer..." -ForegroundColor Cyan
-$releaseArgs = @("release", "create", "v$newVer", $installer, "--title", "v$newVer", "--notes", $Notes, "--repo", $REPO)
+$releaseArgs = @("release", "create", "v$newVer", $installer, "latest.json", "--title", "v$newVer", "--notes", $Notes, "--repo", $REPO)
 $url = & $GH @releaseArgs
 
 Write-Host ""
