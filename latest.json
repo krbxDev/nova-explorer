@@ -1,11 +1,11 @@
-{
-  "version": "1.0.27",
-  "notes": "v1.0.27 — Full context menu parity on Quick Access & Drives panels\n\n• Quick Access and Drives panels now have the same full context menu as the file pane\n• Pin to Quick access / Unpin from Quick access\n• Give access to — Windows sharing wizard\n• Restore previous versions\n• Scan with Windows Defender\n• Pin to Start\n• Format… (drive roots only)\n• New → Folder\n• New → Text Document (creates file + enters rename)\n• Works in both main sidebar and split-pane sidebars",
-  "pub_date": "2026-06-08T15:00:00Z",
-  "platforms": {
-    "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmRzWW0zUXJQVWZXRDVDVndCNlM3YWZsTmtvYUNaN0IxZ3VnU2xMQ2RzZFptY1kxQjBUcVNNSlF1azR4UGZXSEZsVzJkVkR2RFRCREVSeHYzZXB2aVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTMzNjI0CWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yN194NjQtc2V0dXAuZXhlCjUzNytJUHV6L3lJWXlqeUdTcHB1cmpsSGhzZGFhZG1pa0R1TVAyNUxQanFuc3I4TWlmME90VDdJYlRob1lNWnJyRy9lVVBEeDk2RUxqZERHMkhueEF3PT0K",
-      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.27/KRB.Explorer_1.0.27_x64-setup.exe"
-    }
-  }
+﻿{
+    "version":  "1.0.28",
+    "notes":  "v1.0.28 - Remove built-in terminal; auto-cleanup old releases on publish\n\n- Removed the built-in terminal panel (toolbar button and keyboard shortcut gone)\n- GitHub: only the latest release is kept, all previous removed automatically on each publish\n- release.ps1 script added for automated build, sign, and release workflow",
+    "pub_date":  "2026-06-08T15:59:03Z",
+    "platforms":  {
+                      "windows-x86_64":  {
+                                             "signature":  "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmU5S2VrKzFKNThUdTdwWlplVXNrYnZGV1NpK0dlMno3bWsrT2FRVjBXOGVxRGhLZkRJSGdWZ05WQjlCVVNoZ0FOcWNUWnUrWFFibERPMTJxQjZheGdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTM0MzQzCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yOF94NjQtc2V0dXAuZXhlCmMxTVVHOWdybmZzTVYxQThJNlhUd2RibU9tR0luWGQrNGRUUTZVNEpMdjhrYjJjbUx4bUx0V2gwVTgzWGJsOUw4NXplMGl5aEVXd1AzV3RpbjhXekNnPT0K",
+                                             "url":  "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.28/KRB.Explorer_1.0.28_x64-setup.exe"
+                                         }
+                  }
 }
