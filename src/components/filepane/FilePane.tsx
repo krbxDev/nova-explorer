@@ -512,23 +512,43 @@ export function FilePane({ paneId, showNavBar }: Props) {
         <div className="flex flex-col flex-1 overflow-hidden min-w-0">
 
       {/* Archive banner */}
-      {pane.isArchive && pane.archivePath && (
-        <div className="flex items-center gap-2 px-3 h-7 bg-[var(--accent-dim)] border-b border-[var(--accent)]/30 shrink-0">
-          <span className="text-[10px] text-[var(--accent)] font-medium truncate">
-            📦 {pane.archivePath.split(/[\\/]/).pop()} — read-only archive
-          </span>
-          <button
-            onClick={() => {
-              const parts = pane.archivePath!.replace(/\\/g, "/").split("/");
-              parts.pop();
-              navigate(paneId, parts.join("\\") || pane.archivePath!);
-            }}
-            className="text-[10px] text-[var(--accent)] hover:underline shrink-0 ml-auto"
-          >
-            Leave archive
-          </button>
-        </div>
-      )}
+      {pane.isArchive && pane.archivePath && (() => {
+        // pane.path may be "archive.zip::subdir/" or just "archive.zip"
+        const archiveFile = pane.archivePath.split(/[\\/]/).pop();
+        const sepIdx = pane.path.indexOf("::");
+        const subDir = sepIdx >= 0 ? pane.path.slice(sepIdx + 2).replace(/\/?$/, "") : "";
+        const canGoUpInArchive = subDir.includes("/") || subDir.length > 0;
+
+        const goUpInArchive = () => {
+          if (!canGoUpInArchive) return;
+          const parts = subDir.split("/").filter(Boolean);
+          parts.pop();
+          const newSubDir = parts.length > 0 ? parts.join("/") + "/" : "";
+          navigate(paneId, newSubDir ? `${pane.archivePath}::${newSubDir}` : pane.archivePath!);
+        };
+
+        const leaveArchive = () => {
+          const parts = pane.archivePath!.replace(/\\/g, "/").split("/");
+          parts.pop();
+          navigate(paneId, parts.join("\\") || pane.archivePath!);
+        };
+
+        return (
+          <div className="flex items-center gap-2 px-3 h-7 bg-[var(--accent-dim)] border-b border-[var(--accent)]/30 shrink-0">
+            <span className="text-[10px] text-[var(--accent)] font-medium truncate">
+              📦 {archiveFile}{subDir ? ` › ${subDir}` : ""} — read-only
+            </span>
+            {canGoUpInArchive && (
+              <button onClick={goUpInArchive} className="text-[10px] text-[var(--accent)] hover:underline shrink-0">
+                ↑ Up
+              </button>
+            )}
+            <button onClick={leaveArchive} className="text-[10px] text-[var(--accent)] hover:underline shrink-0 ml-auto">
+              Leave archive
+            </button>
+          </div>
+        );
+      })()}
 
       {/* Local search / filter bar */}
       <div className="flex items-center h-8 px-2 border-b border-[var(--border)] gap-2 shrink-0">

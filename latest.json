@@ -1,11 +1,11 @@
 {
-  "version": "1.0.21",
-  "notes": "v1.0.21 — New KRB Explorer icon",
-  "pub_date": "2026-06-09T02:30:00Z",
+  "version": "1.0.22",
+  "notes": "v1.0.22 — Fix archive subfolder navigation\n\n• Opening folders inside zip/tar archives now works correctly\n• Archive banner shows current subfolder path and an Up button\n• Leave archive always returns to the parent folder on disk",
+  "pub_date": "2026-06-09T03:00:00Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlQycHppWHVIRUcrMmVjMkFOZ3pseXMzdzNxUFozb3NVRnV4UWkwVmtYdmNiVGpuNFUrS1A3enU3UEFCVTRtZGFiRVFwM2VXWG1xKzBodFhEc0tMZ3djPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTI5Mzg2CWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yMV94NjQtc2V0dXAuZXhlClZnUkpTcmtTNllsUnRqQXM0S21ub3ZBNFdndXlxRmxkdFYwUmpXU3hkSlJkOGZjN3NmUFVXQlpWLy9vWFVCeXdUQnIwVmFraXBNdTc3QkpuNFZvRkFRPT0K",
-      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.21/KRB.Explorer_1.0.21_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmFrNzNTNHZGUzZVWjU3Mjgzb0R6ZThBU1pSOERraGdGTlY4cjFhdEUzNFJPUGZ2b24vaGxzMmo3d1hrRm94a3cwMmVXY2JDcHZnK0JSaHRQZTFiTlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTI5OTIzCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yMl94NjQtc2V0dXAuZXhlCkR2RTFFM2lWTFExUG1JblFmMUgwbzVxeFNGbU1rUTFOb2EvQUp1cHFudE5MaDc3am94VklLNndvM010d0krNWpTVmg4VVF1M214L2thNUxtZGJMK0RBPT0K",
+      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.22/KRB.Explorer_1.0.22_x64-setup.exe"
     }
   }
 }

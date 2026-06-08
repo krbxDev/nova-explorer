@@ -212,47 +212,74 @@ export const useStore = create<NovaStore>()(
         const pane = get().panes[paneId];
         let entries: FileEntry[] = [];
 
-        if (isArchive) {
-          try {
-            const { archive } = await import("../lib/invoke");
-            const rawEntries = await archive.list(path);
-            // Show only top-level entries (no nested paths)
-            const seen = new Set<string>();
-            const entries: FileEntry[] = rawEntries
-              .filter((e: any) => {
-                const parts = e.path.replace(/\\/g, "/").split("/").filter(Boolean);
-                return parts.length <= 1;
-              })
-              .filter((e: any) => {
-                const key = e.path.replace(/\\/g, "/").replace(/\/$/, "");
-                if (seen.has(key)) return false;
-                seen.add(key);
-                return true;
-              })
-              .map((e: any): FileEntry => {
-                const namePart = e.name || e.path.replace(/\\/g, "/").split("/").filter(Boolean).pop() || e.path;
-                const extPart = e.isDir ? null : namePart.includes(".") ? namePart.split(".").pop()!.toLowerCase() : null;
-                return {
-                  name: namePart,
-                  path: `${path}::${e.path}`,
-                  isDir: e.isDir,
-                  isSymlink: false,
-                  isHidden: false,
-                  size: e.size ?? 0,
-                  modified: e.modified ?? null,
-                  created: null,
-                  extension: extPart,
-                  readonly: true,
-                  iconType: e.isDir ? "folder" : extPart ?? "file",
-                };
-              });
-            entries.sort((a, b) => {
-              if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
-              return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        // Helper: list entries from an archive, optionally scoped to a sub-directory
+        const listArchive = async (archivePath: string, subDir: string = "") => {
+          const { archive } = await import("../lib/invoke");
+          const rawEntries = await archive.list(archivePath);
+          const prefix = subDir ? subDir.replace(/\\/g, "/").replace(/\/?$/, "/") : "";
+          const seen = new Set<string>();
+          const result: FileEntry[] = rawEntries
+            .filter((e: any) => {
+              const ep = e.path.replace(/\\/g, "/");
+              if (!ep.startsWith(prefix)) return false;
+              const remaining = ep.slice(prefix.length).split("/").filter(Boolean);
+              return remaining.length === 1 || (remaining.length === 0 && e.isDir);
+            })
+            .filter((e: any) => {
+              const key = e.path.replace(/\\/g, "/").replace(/\/?$/, "");
+              if (seen.has(key)) return false;
+              seen.add(key);
+              return true;
+            })
+            .map((e: any): FileEntry => {
+              const namePart = e.name || e.path.replace(/\\/g, "/").replace(/\/?$/, "").split("/").pop() || e.path;
+              const extPart = e.isDir ? null : namePart.includes(".") ? namePart.split(".").pop()!.toLowerCase() : null;
+              return {
+                name: namePart,
+                path: `${archivePath}::${e.path}`,
+                isDir: e.isDir,
+                isSymlink: false,
+                isHidden: false,
+                size: e.size ?? 0,
+                modified: e.modified ?? null,
+                created: null,
+                extension: extPart,
+                readonly: true,
+                iconType: e.isDir ? "folder" : extPart ?? "file",
+              };
             });
+          result.sort((a, b) => {
+            if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
+            return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+          });
+          return result;
+        };
+
+        // Case 1: navigating INTO a subfolder inside an already-open archive
+        // path looks like: C:\foo\bar.zip::some/subdir/
+        if (path.includes("::")) {
+          const sepIdx = path.indexOf("::");
+          const archivePath = path.slice(0, sepIdx);
+          const subDir = path.slice(sepIdx + 2);
+          try {
+            const result = await listArchive(archivePath, subDir);
             set((s) => {
               const p = s.panes[paneId];
-              if (p) { p.loading = false; p.isArchive = true; p.archivePath = path; p.entries = entries; p.error = null; }
+              if (p) { p.loading = false; p.isArchive = true; p.archivePath = archivePath; p.entries = result; p.error = null; }
+            });
+          } catch (err: any) {
+            set((s) => { const p = s.panes[paneId]; if (p) { p.loading = false; p.error = String(err); } });
+          }
+          return;
+        }
+
+        // Case 2: opening an archive file from the filesystem
+        if (isArchive) {
+          try {
+            const result = await listArchive(path);
+            set((s) => {
+              const p = s.panes[paneId];
+              if (p) { p.loading = false; p.isArchive = true; p.archivePath = path; p.entries = result; p.error = null; }
             });
           } catch (err: any) {
             set((s) => {
