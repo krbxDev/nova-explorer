@@ -45,21 +45,25 @@ $sigLines = cargo tauri signer sign --private-key-path $KEY --password $KEY_PASS
 $sig = ($sigLines | Where-Object { $_ -match "^dW" } | Select-Object -First 1)
 if (-not $sig) { Write-Error "Could not extract signature"; exit 1 }
 
-# Update latest.json
+# Update latest.json (build clean JSON manually to avoid ConvertTo-Json double-space bug)
 Write-Host "Updating latest.json..." -ForegroundColor Cyan
-$pubDate = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-$latestObj = [ordered]@{
-    version   = $newVer
-    notes     = $Notes
-    pub_date  = $pubDate
-    platforms = [ordered]@{
-        "windows-x86_64" = [ordered]@{
-            signature = $sig
-            url       = "https://github.com/$REPO/releases/download/v$newVer/KRB.Explorer_${newVer}_x64-setup.exe"
-        }
+$pubDate  = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+$notesEsc = $Notes -replace '\\', '\\' -replace '"', '\"'
+$releaseUrl = "https://github.com/$REPO/releases/download/v$newVer/KRB.Explorer_${newVer}_x64-setup.exe"
+$json = @"
+{
+  "version": "$newVer",
+  "notes": "$notesEsc",
+  "pub_date": "$pubDate",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "$sig",
+      "url": "$releaseUrl"
     }
+  }
 }
-$latestObj | ConvertTo-Json -Depth 5 | Out-File -FilePath "latest.json" -Encoding utf8 -NoNewline
+"@
+$json | Out-File -FilePath "latest.json" -Encoding utf8 -NoNewline
 
 # Commit and push
 Write-Host "Committing..." -ForegroundColor Cyan

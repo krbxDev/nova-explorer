@@ -1,11 +1,11 @@
-﻿{
-    "version":  "1.0.28",
-    "notes":  "v1.0.28 - Remove built-in terminal; auto-cleanup old releases on publish\n\n- Removed the built-in terminal panel (toolbar button and keyboard shortcut gone)\n- GitHub: only the latest release is kept, all previous removed automatically on each publish\n- release.ps1 script added for automated build, sign, and release workflow",
-    "pub_date":  "2026-06-08T15:59:03Z",
-    "platforms":  {
-                      "windows-x86_64":  {
-                                             "signature":  "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmU5S2VrKzFKNThUdTdwWlplVXNrYnZGV1NpK0dlMno3bWsrT2FRVjBXOGVxRGhLZkRJSGdWZ05WQjlCVVNoZ0FOcWNUWnUrWFFibERPMTJxQjZheGdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTM0MzQzCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yOF94NjQtc2V0dXAuZXhlCmMxTVVHOWdybmZzTVYxQThJNlhUd2RibU9tR0luWGQrNGRUUTZVNEpMdjhrYjJjbUx4bUx0V2gwVTgzWGJsOUw4NXplMGl5aEVXd1AzV3RpbjhXekNnPT0K",
-                                             "url":  "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.28/KRB.Explorer_1.0.28_x64-setup.exe"
-                                         }
-                  }
+{
+  "version": "1.0.28",
+  "notes": "v1.0.28 - Remove built-in terminal; auto-cleanup old releases on publish\n\n- Removed the built-in terminal panel (toolbar button and keyboard shortcut gone)\n- GitHub: only the latest release is kept, all previous removed automatically on each publish\n- release.ps1 script added for automated build, sign, and release workflow",
+  "pub_date": "2026-06-08T15:59:03Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmU5S2VrKzFKNThUdTdwWlplVXNrYnZGV1NpK0dlMno3bWsrT2FRVjBXOGVxRGhLZkRJSGdWZ05WQjlCVVNoZ0FOcWNUWnUrWFFibERPMTJxQjZheGdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTM0MzQzCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4yOF94NjQtc2V0dXAuZXhlCmMxTVVHOWdybmZzTVYxQThJNlhUd2RibU9tR0luWGQrNGRUUTZVNEpMdjhrYjJjbUx4bUx0V2gwVTgzWGJsOUw4NXplMGl5aEVXd1AzV3RpbjhXekNnPT0K",
+      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.28/KRB.Explorer_1.0.28_x64-setup.exe"
+    }
+  }
 }
