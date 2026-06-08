@@ -59,9 +59,19 @@ export function TerminalPanel() {
     term.loadAddon(links);
     term.open(containerRef.current);
     fit.fit();
+    term.focus();
 
     xtermRef.current   = term;
     fitAddonRef.current = fit;
+
+    // Prevent the WebView from swallowing space/arrow keys before xterm sees them
+    const el = containerRef.current!;
+    const trapKeys = (e: KeyboardEvent) => {
+      const trapped = [" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+                       "PageUp", "PageDown", "Home", "End", "Tab"];
+      if (trapped.includes(e.key)) e.preventDefault();
+    };
+    el.addEventListener("keydown", trapKeys, { capture: true });
 
     // Forward keystrokes → PTY stdin
     term.onData((data) => { invoke("pty_write", { data }).catch(() => {}); });
@@ -78,6 +88,7 @@ export function TerminalPanel() {
 
     return () => {
       ro.disconnect();
+      el.removeEventListener("keydown", trapKeys, { capture: true });
       cleanupListeners();
       invoke("pty_kill").catch(() => {});
       term.dispose();
@@ -150,7 +161,7 @@ export function TerminalPanel() {
       </div>
 
       {/* xterm.js */}
-      <div ref={containerRef} className="flex-1 overflow-hidden px-1 pt-1" style={{ minHeight: 0 }} />
+      <div ref={containerRef} tabIndex={0} className="flex-1 overflow-hidden px-1 pt-1" style={{ minHeight: 0, outline: "none" }} />
     </div>
   );
 }
