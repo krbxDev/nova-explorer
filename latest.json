@@ -1,11 +1,11 @@
 {
-  "version": "1.0.34",
-  "notes": "fix: WSL distro names rendering as garbled text (UTF-16 LE decode without BOM)",
-  "pub_date": "2026-06-08T23:14:51Z",
+  "version": "1.0.35",
+  "notes": "remove tab bar - split view is used instead",
+  "pub_date": "2026-06-08T23:26:31Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlJpbnlZaWQvMkpSejVWeEpRaFE1OGxSY3lLNFBUei9LbENHRTlvMWJtMzVkR2VOdzBQQ0U2ajA1MVpwQS9SQWpPTzROdXYyUVowVlI5TEk4TnlMMHdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTYwNDkxCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zNF94NjQtc2V0dXAuZXhlCllmVTdtUlZ6SG85bTd2SngyVDl3QzN1STBWQzg4NHpxOUFDVUFPVnpEZ09HU3ZOYTBpdHJBaWNNbVkyTXI1UDZDOWFud1hsbnJwWmJXU0NsejhnTkN3PT0K",
-      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.34/KRB.Explorer_1.0.34_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlZyYnRvMzdCWndaY0J6RHF1d2s5MCtabE95YUVjUXJmOVFBYzRXWUFyWFgya1NuVzByVHR5cHdhSklxVCtJQkU5ZnJFRFA2aGZGR245WWJDZVYreUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTYxMTkxCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zNV94NjQtc2V0dXAuZXhlCndYMmUvam1LVlRZT0I5ejNPb0FVWEZVZ0hHTlhIUUJCY0l1UHFuVkNxVVJieFBRcnY4RmdyUGpqRnc3dmxDSHVwek00eFFGditTMHNpVExnanQ3bURnPT0K",
+      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.35/KRB.Explorer_1.0.35_x64-setup.exe"
     }
   }
 }
