@@ -1,11 +1,11 @@
 {
-  "version": "1.0.5",
-  "notes": "Fix date modified sort: entries now sort purely by date when that column is active (folders no longer pinned first). Date display updated to dd/MM/yyyy HH:mm:ss so per-second differences are visible.",
-  "pub_date": "2026-06-08T09:48:32Z",
+  "version": "1.0.6",
+  "notes": "Fix CMD window flash: git status now runs with CREATE_NO_WINDOW so no console window appears when navigating folders.",
+  "pub_date": "2026-06-08T09:56:47Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlJzQndZZytTbTFsQlZqbWRxbUxDUEcyVi9rOVFBUGRsaEZwOThZQVJTa0swcmY2ZXNFcWJpa2xiUGZkaWsva2VoUTcxaGY3YXJ0cmtOOE9RREcrNGdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTEyMTEyCWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuNV94NjQtc2V0dXAuZXhlCnBEVGM3MCtOTXlRMjMvVHA1OUF5VkJVSjBQdkpsOEt5SDVjVVdQZ2l1cExtbTh3akRhL0Q0THNiOVE1TGxZaUx2QlBrSTZUZnM1V2tEUFpkRGNyaUJnPT0K",
-      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.5/Nova.Explorer_1.0.5_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmNPQ0pHYjl0a0hNNE8rSHFEUHVSUGpIZDZ4ZC8ya3pReUdwVVhYRHNMR1QybHBBRmtoVUx6VkVRSVo3S0xlQzRuY2p6ZXdBU1lOYmdDSzdQc1BkUHdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTEyNjA3CWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuNl94NjQtc2V0dXAuZXhlClRiS3lPNUJqZ3NVd3g3eWlGYUtDR053RmtvSUVnWGdFUEVpZ3QrLzlOY2J5cEt1UGF3SU9YTEFOR0EyZ2Y3WlQ4ZFhRVERvc2phSHFBc3JjY3dQb0NnPT0K",
+      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.6/Nova.Explorer_1.0.6_x64-setup.exe"
     }
   }
 }

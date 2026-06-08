@@ -275,9 +275,13 @@ pub async fn open_item(path: String) -> Result<(), String> {
 #[command]
 pub async fn open_in_vscode(path: String) -> Result<(), String> {
     tokio::task::spawn_blocking(move || {
-        std::process::Command::new("code")
-            .arg(&path)
-            .spawn()
+        #[cfg(windows)]
+        use std::os::windows::process::CommandExt;
+        let mut cmd = std::process::Command::new("code");
+        cmd.arg(&path);
+        #[cfg(windows)]
+        cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+        cmd.spawn()
             .map(|_| ())
             .map_err(|e| format!("Could not open VS Code: {}", e))
     })

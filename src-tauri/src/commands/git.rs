@@ -3,6 +3,11 @@ use std::collections::HashMap;
 use std::process::Command;
 use tauri::command;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GitStatus {
@@ -23,9 +28,12 @@ pub async fn get_git_status(path: String) -> Result<GitStatus, String> {
 
 fn get_git_status_impl(path: &str) -> Result<GitStatus, String> {
     // Check if this is a git repo
-    let root_output = Command::new("git")
-        .args(["-C", path, "rev-parse", "--show-toplevel"])
-        .output();
+    let root_output = {
+        let mut cmd = Command::new("git");
+        cmd.args(["-C", path, "rev-parse", "--show-toplevel"]);
+        #[cfg(windows)] cmd.creation_flags(CREATE_NO_WINDOW);
+        cmd.output()
+    };
 
     let root = match root_output {
         Ok(out) if out.status.success() => {
@@ -35,19 +43,22 @@ fn get_git_status_impl(path: &str) -> Result<GitStatus, String> {
     };
 
     // Get branch
-    let branch = Command::new("git")
-        .args(["-C", path, "branch", "--show-current"])
-        .output()
-        .ok()
-        .and_then(|o| if o.status.success() {
+    let branch = {
+        let mut cmd = Command::new("git");
+        cmd.args(["-C", path, "branch", "--show-current"]);
+        #[cfg(windows)] cmd.creation_flags(CREATE_NO_WINDOW);
+        cmd.output().ok().and_then(|o| if o.status.success() {
             Some(String::from_utf8_lossy(&o.stdout).trim().to_string())
-        } else { None });
+        } else { None })
+    };
 
     // Get status --porcelain
-    let status_output = Command::new("git")
-        .args(["-C", &root, "status", "--porcelain", "-u"])
-        .output()
-        .map_err(|e| e.to_string())?;
+    let status_output = {
+        let mut cmd = Command::new("git");
+        cmd.args(["-C", &root, "status", "--porcelain", "-u"]);
+        #[cfg(windows)] cmd.creation_flags(CREATE_NO_WINDOW);
+        cmd.output().map_err(|e| e.to_string())?
+    };
 
     let mut files: HashMap<String, String> = HashMap::new();
     if status_output.status.success() {
