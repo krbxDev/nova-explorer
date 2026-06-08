@@ -35,13 +35,42 @@ pub async fn list_directory(
     let asc = sort_asc.unwrap_or(true);
 
     entries.sort_by(|a, b| {
-        if a.is_dir != b.is_dir {
+        // Dirs-first only applies to name sort, matching File Explorer behaviour.
+        // For date/size/type sorts everything is ordered by the chosen key so the
+        // modified column reflects the true order top-to-bottom.
+        let dirs_first = sort_key == "name" || sort_key == "type";
+        if dirs_first && a.is_dir != b.is_dir {
             return if a.is_dir { std::cmp::Ordering::Less } else { std::cmp::Ordering::Greater };
         }
+
         let ord = match sort_key {
-            "size" => a.size.cmp(&b.size),
-            "modified" => a.modified.cmp(&b.modified),
-            "type" => a.extension.cmp(&b.extension),
+            "size" => {
+                // Dirs have size 0; sort them after files when descending so they
+                // don't all cluster at the top.
+                if a.is_dir != b.is_dir {
+                    return if a.is_dir { std::cmp::Ordering::Greater } else { std::cmp::Ordering::Less };
+                }
+                a.size.cmp(&b.size)
+            }
+            "modified" => {
+                // RFC-3339 strings are always UTC from our backend so lexicographic
+                // order equals chronological order. None sorts last (treat as epoch 0).
+                match (&a.modified, &b.modified) {
+                    (None, None) => std::cmp::Ordering::Equal,
+                    (None, Some(_)) => std::cmp::Ordering::Less,
+                    (Some(_), None) => std::cmp::Ordering::Greater,
+                    (Some(am), Some(bm)) => am.cmp(bm),
+                }
+            }
+            "type" => {
+                // Sort by extension, then name within the same extension.
+                let ext_ord = a.extension.cmp(&b.extension);
+                if ext_ord == std::cmp::Ordering::Equal {
+                    a.name.to_lowercase().cmp(&b.name.to_lowercase())
+                } else {
+                    ext_ord
+                }
+            }
             _ => a.name.to_lowercase().cmp(&b.name.to_lowercase()),
         };
         if asc { ord } else { ord.reverse() }

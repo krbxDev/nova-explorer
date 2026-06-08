@@ -18,8 +18,9 @@ export function formatDate(iso: string | null, relative = false): string {
   if (!iso) return "";
   try {
     const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
     if (relative) return formatDistanceToNow(d, { addSuffix: true });
-    return format(d, "MMM d, yyyy h:mm a");
+    return format(d, "dd/MM/yyyy HH:mm:ss");
   } catch {
     return iso;
   }

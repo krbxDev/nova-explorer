@@ -1,11 +1,11 @@
 {
-  "version": "1.0.4",
-  "notes": "Fix: folder filter resets on navigation, zip files now show contents, file types (.lnk/.url/.exe) open correctly, proper type labels in all columns.",
-  "pub_date": "2026-06-07T21:21:37Z",
+  "version": "1.0.5",
+  "notes": "Fix date modified sort: entries now sort purely by date when that column is active (folders no longer pinned first). Date display updated to dd/MM/yyyy HH:mm:ss so per-second differences are visible.",
+  "pub_date": "2026-06-08T09:48:32Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmMxVXF4cWtnb0tIbmxabE1odkZka1Q2a2RUTFJCVGF3eHNFMCs4ZUxNY243NFFwZ0lwM3IyZld6bDB2blR2YXJSUlhNUnJEd3JOVUZtMVd5ZFpDVXdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwODY3Mjg0CWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuNF94NjQtc2V0dXAuZXhlCjZpSlRiTnJ0aUNKSzhPeGREc3lBdWtteVpIU2xiTCt0Y25SMjZxQ01FMGhOZXBKN01OYkNGcDJyWDJtYnlkYmc4OFJjZlVnWUxBT3p3S0V3c0lJNEF3PT0K",
-      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.4/Nova.Explorer_1.0.4_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlJzQndZZytTbTFsQlZqbWRxbUxDUEcyVi9rOVFBUGRsaEZwOThZQVJTa0swcmY2ZXNFcWJpa2xiUGZkaWsva2VoUTcxaGY3YXJ0cmtOOE9RREcrNGdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTEyMTEyCWZpbGU6Tm92YSBFeHBsb3Jlcl8xLjAuNV94NjQtc2V0dXAuZXhlCnBEVGM3MCtOTXlRMjMvVHA1OUF5VkJVSjBQdkpsOEt5SDVjVVdQZ2l1cExtbTh3akRhL0Q0THNiOVE1TGxZaUx2QlBrSTZUZnM1V2tEUFpkRGNyaUJnPT0K",
+      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.5/Nova.Explorer_1.0.5_x64-setup.exe"
     }
   }
 }
