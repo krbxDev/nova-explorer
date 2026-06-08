@@ -11,7 +11,6 @@ import { QuickLook } from "./components/quicklook/QuickLook";
 import { BulkRenameModal } from "./components/bulkrename/BulkRenameModal";
 import { DiskUsageModal } from "./components/diskusage/DiskUsageModal";
 import { CopyProgressBar } from "./components/progress/CopyProgressBar";
-import { TerminalPanel } from "./components/terminal/TerminalPanel";
 import { UpdateChecker } from "./components/updater/UpdateChecker";
 import { PropertiesDialog } from "./components/filepane/PropertiesDialog";
 import { ConflictDialog } from "./components/filepane/ConflictDialog";
@@ -23,7 +22,7 @@ export function App() {
   const {
     activePaneId, panes, splitMode, splitPaneIds, tabs, activeTabId,
     navigate, loadDrives, loadFavorites, previewOpen,
-    sidebarCollapsed, terminalOpen,
+    sidebarCollapsed,
   } = useStore();
 
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -40,7 +39,10 @@ export function App() {
     loadDrives();
     loadFavorites();
     const initialPaneId = Object.keys(panes)[0];
-    if (initialPaneId) navigate(initialPaneId, panes[initialPaneId].path);
+    // Support ?path=... so "Open in new window" can pass a starting directory
+    const urlPath = new URLSearchParams(window.location.search).get("path");
+    const startPath = urlPath ? decodeURIComponent(urlPath) : panes[initialPaneId]?.path;
+    if (initialPaneId && startPath) navigate(initialPaneId, startPath);
   }, []);
 
   const activeTab = tabs.find((t) => t.id === activeTabId);
@@ -81,7 +83,6 @@ export function App() {
         {previewOpen && <PreviewPanel />}
       </div>
 
-      {terminalOpen && <TerminalPanel />}
       <StatusBar />
       <CommandPalette />
       <QuickLook />

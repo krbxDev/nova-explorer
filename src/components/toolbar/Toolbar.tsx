@@ -1,7 +1,7 @@
 import {
   ChevronLeft, ChevronRight, ChevronUp, RotateCcw, LayoutList,
   LayoutGrid, AlignJustify, Eye, EyeOff, SplitSquareHorizontal,
-  SplitSquareVertical, Terminal, FileEdit, BarChart3, PanelRight,
+  SplitSquareVertical, FileEdit, BarChart3, PanelRight,
   CheckSquare, Type, FolderPlus, Undo2, Redo2
 } from "lucide-react";
 import { useStore } from "../../store";
@@ -44,8 +44,8 @@ export function Toolbar() {
     activePaneId, panes, splitMode, previewOpen,
     navigateBack, navigateForward, navigateUp, refresh,
     setViewMode, setShowHidden, setSplit, openPreview, closePreview,
-    toggleTerminal, toggleBulkRename, toggleDiskUsage,
-    terminalOpen, bulkRenameOpen, diskUsageOpen,
+    toggleBulkRename, toggleDiskUsage,
+    bulkRenameOpen, diskUsageOpen,
     checkboxMode, toggleCheckboxMode,
     showExtensions, toggleShowExtensions,
     undoStack, redoStack, undo, redo,
@@ -128,8 +128,6 @@ export function Toolbar() {
       <Btn icon={<PanelRight size={14} />} label="Preview panel (Alt+P)"
         onClick={() => previewOpen ? closePreview() : openPreview(pane.path)}
         active={previewOpen} />
-      <Btn icon={<Terminal size={14} />} label="Terminal (Ctrl+`)"
-        onClick={toggleTerminal} active={terminalOpen} />
       <Btn icon={<FileEdit size={14} />} label="Bulk rename"
         onClick={toggleBulkRename} active={bulkRenameOpen} />
       <Btn icon={<BarChart3 size={14} />} label="Disk usage"

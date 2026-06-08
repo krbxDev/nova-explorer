@@ -6,7 +6,7 @@ export function useKeyboard() {
     activePaneId, navigateBack, navigateForward, navigateUp, refresh,
     openTab, closeTab, activeTabId, tabs, openPalette, selectAll, invertSelection,
     setViewMode, panes, setClipboard, pasteClipboard, clipboard,
-    openQuickLook, toggleTerminal, toggleBulkRename, toggleDiskUsage,
+    openQuickLook, toggleBulkRename, toggleDiskUsage,
     previewOpen, openPreview, closePreview, undo, redo,
   } = useStore();
 
@@ -93,9 +93,6 @@ export function useKeyboard() {
         if (previewOpen) closePreview();
         else if (pane?.path) openPreview(pane.path);
       }
-
-      // Terminal
-      else if (e.ctrlKey && e.key === "`") { e.preventDefault(); toggleTerminal(); }
 
       // Panels
       else if (!isInput && e.ctrlKey && e.shiftKey && e.key === "R") { e.preventDefault(); toggleBulkRename(); }
