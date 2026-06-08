@@ -9,6 +9,12 @@ import { useStore } from "../../store";
 import { fs } from "../../lib/invoke";
 import "@xterm/xterm/css/xterm.css";
 
+// Keys WebView2 consumes before xterm.js can see them
+const TRAPPED_KEYS = new Set([
+  " ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+  "PageUp", "PageDown", "Home", "End", "Tab",
+]);
+
 export function TerminalPanel() {
   const { terminalOpen, toggleTerminal, activePaneId, panes } = useStore();
   const pane = panes[activePaneId];
@@ -17,8 +23,6 @@ export function TerminalPanel() {
   const containerRef  = useRef<HTMLDivElement>(null);
   const xtermRef      = useRef<XTerm | null>(null);
   const fitAddonRef   = useRef<FitAddon | null>(null);
-  // Track the path the PTY was last spawned for so the path-change effect
-  // doesn't re-spawn on the very first render (mount already handles it).
   const spawnedPathRef = useRef<string | null>(null);
   const unlistenRefs   = useRef<Array<() => void>>([]);
 
@@ -61,20 +65,30 @@ export function TerminalPanel() {
     fit.fit();
     term.focus();
 
-    xtermRef.current   = term;
+    xtermRef.current    = term;
     fitAddonRef.current = fit;
 
-    // Prevent the WebView from swallowing space/arrow keys before xterm sees them
-    const el = containerRef.current!;
+    // ── Key trapping ────────────────────────────────────────────────────
+    // WebView2 intercepts space/arrow keys at the browser level even when a
+    // focused textarea (xterm's input target) is inside. Attaching to window
+    // in the capture phase lets us preventDefault before WebView2 acts on it,
+    // but only when xterm actually holds focus.
     const trapKeys = (e: KeyboardEvent) => {
-      const trapped = [" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
-                       "PageUp", "PageDown", "Home", "End", "Tab"];
-      if (trapped.includes(e.key)) e.preventDefault();
+      if (!TRAPPED_KEYS.has(e.key)) return;
+      // Only intercept when xterm's internal textarea is the active element
+      const xtermEl = xtermRef.current?.element;
+      if (xtermEl && xtermEl.contains(document.activeElement)) {
+        e.preventDefault();
+      }
     };
-    el.addEventListener("keydown", trapKeys, { capture: true });
+    window.addEventListener("keydown", trapKeys, { capture: true });
 
     // Forward keystrokes → PTY stdin
     term.onData((data) => { invoke("pty_write", { data }).catch(() => {}); });
+
+    // Re-focus xterm if the user clicks anywhere inside the terminal panel
+    const refocusOnClick = () => term.focus();
+    containerRef.current.addEventListener("mousedown", refocusOnClick);
 
     // Resize observer → fit + backend resize
     const ro = new ResizeObserver(() => {
@@ -88,7 +102,8 @@ export function TerminalPanel() {
 
     return () => {
       ro.disconnect();
-      el.removeEventListener("keydown", trapKeys, { capture: true });
+      window.removeEventListener("keydown", trapKeys, { capture: true });
+      containerRef.current?.removeEventListener("mousedown", refocusOnClick);
       cleanupListeners();
       invoke("pty_kill").catch(() => {});
       term.dispose();
@@ -100,8 +115,6 @@ export function TerminalPanel() {
 
   // ── Re-spawn when the user navigates to a new folder ────────────────────
   useEffect(() => {
-    // Skip if the terminal isn't open, xterm isn't ready, or this is the
-    // same path we already spawned for (avoids re-running on initial mount).
     if (!terminalOpen || !xtermRef.current || !fitAddonRef.current) return;
     if (spawnedPathRef.current === path) return;
 
