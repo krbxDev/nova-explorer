@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { X, ExternalLink, Terminal } from "lucide-react";
 import { Terminal as XTerm } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
@@ -14,42 +14,20 @@ export function TerminalPanel() {
   const pane = panes[activePaneId];
   const path = pane?.path ?? "C:\\";
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const xtermRef = useRef<XTerm | null>(null);
-  const fitAddonRef = useRef<FitAddon | null>(null);
-  const unlistenOutputRef = useRef<(() => void) | null>(null);
-  const unlistenExitRef = useRef<(() => void) | null>(null);
-  const pathRef = useRef(path);
-  pathRef.current = path;
+  const containerRef  = useRef<HTMLDivElement>(null);
+  const xtermRef      = useRef<XTerm | null>(null);
+  const fitAddonRef   = useRef<FitAddon | null>(null);
+  // Track the path the PTY was last spawned for so the path-change effect
+  // doesn't re-spawn on the very first render (mount already handles it).
+  const spawnedPathRef = useRef<string | null>(null);
+  const unlistenRefs   = useRef<Array<() => void>>([]);
 
-  const spawnPty = useCallback(async (term: XTerm, fit: FitAddon) => {
-    // Clean up previous listeners
-    unlistenOutputRef.current?.();
-    unlistenExitRef.current?.();
+  const cleanupListeners = () => {
+    unlistenRefs.current.forEach((fn) => fn());
+    unlistenRefs.current = [];
+  };
 
-    // Calculate current size
-    fit.fit();
-    const cols = term.cols;
-    const rows = term.rows;
-
-    // Listen for output
-    unlistenOutputRef.current = await listen<string>("pty://output", (e) => {
-      term.write(e.payload);
-    });
-
-    // Listen for process exit
-    unlistenExitRef.current = await listen("pty://exit", () => {
-      term.writeln("\r\n\x1b[90m[Process exited]\x1b[0m");
-    });
-
-    try {
-      await invoke("pty_spawn", { path: pathRef.current, cols, rows });
-    } catch (e) {
-      term.writeln(`\r\n\x1b[31mFailed to start terminal: ${e}\x1b[0m`);
-    }
-  }, []);
-
-  // Mount xterm once
+  // ── Mount / unmount the xterm instance ──────────────────────────────────
   useEffect(() => {
     if (!terminalOpen || !containerRef.current) return;
 
@@ -62,64 +40,87 @@ export function TerminalPanel() {
         foreground: "#e2e2e5",
         cursor: "#7c8cf8",
         selectionBackground: "#3b4166",
-        black:   "#1a1a2e", brightBlack:   "#555570",
-        red:     "#f87171", brightRed:     "#fc8181",
-        green:   "#4ade80", brightGreen:   "#86efac",
-        yellow:  "#fbbf24", brightYellow:  "#fcd34d",
-        blue:    "#60a5fa", brightBlue:    "#93c5fd",
-        magenta: "#c084fc", brightMagenta: "#d8b4fe",
-        cyan:    "#22d3ee", brightCyan:    "#67e8f9",
-        white:   "#e2e2e5", brightWhite:   "#ffffff",
+        black:         "#1a1a2e", brightBlack:   "#555570",
+        red:           "#f87171", brightRed:     "#fc8181",
+        green:         "#4ade80", brightGreen:   "#86efac",
+        yellow:        "#fbbf24", brightYellow:  "#fcd34d",
+        blue:          "#60a5fa", brightBlue:    "#93c5fd",
+        magenta:       "#c084fc", brightMagenta: "#d8b4fe",
+        cyan:          "#22d3ee", brightCyan:    "#67e8f9",
+        white:         "#e2e2e5", brightWhite:   "#ffffff",
       },
       cursorBlink: true,
-      allowTransparency: false,
       scrollback: 5000,
     });
 
-    const fit = new FitAddon();
+    const fit   = new FitAddon();
     const links = new WebLinksAddon();
     term.loadAddon(fit);
     term.loadAddon(links);
     term.open(containerRef.current);
     fit.fit();
 
-    xtermRef.current = term;
+    xtermRef.current   = term;
     fitAddonRef.current = fit;
 
-    // Forward keystrokes to PTY
-    term.onData((data) => {
-      invoke("pty_write", { data }).catch(() => {});
-    });
+    // Forward keystrokes → PTY stdin
+    term.onData((data) => { invoke("pty_write", { data }).catch(() => {}); });
 
-    spawnPty(term, fit);
-
-    // Resize observer
+    // Resize observer → fit + backend resize
     const ro = new ResizeObserver(() => {
       fit.fit();
       invoke("pty_resize", { cols: term.cols, rows: term.rows }).catch(() => {});
     });
-    if (containerRef.current) ro.observe(containerRef.current);
+    ro.observe(containerRef.current!);
+
+    // Spawn PTY for the initial path
+    spawnTerminal(term, fit, path);
 
     return () => {
       ro.disconnect();
-      unlistenOutputRef.current?.();
-      unlistenExitRef.current?.();
+      cleanupListeners();
       invoke("pty_kill").catch(() => {});
       term.dispose();
-      xtermRef.current = null;
-      fitAddonRef.current = null;
+      xtermRef.current    = null;
+      fitAddonRef.current  = null;
+      spawnedPathRef.current = null;
     };
-  }, [terminalOpen]);
+  }, [terminalOpen]); // runs only when panel opens/closes
 
-  // Re-spawn when the active pane path changes (user navigated)
+  // ── Re-spawn when the user navigates to a new folder ────────────────────
   useEffect(() => {
+    // Skip if the terminal isn't open, xterm isn't ready, or this is the
+    // same path we already spawned for (avoids re-running on initial mount).
     if (!terminalOpen || !xtermRef.current || !fitAddonRef.current) return;
+    if (spawnedPathRef.current === path) return;
+
     const term = xtermRef.current;
-    const fit = fitAddonRef.current;
-    term.writeln(`\r\n\x1b[90m[cd ${path}]\x1b[0m\r`);
+    const fit  = fitAddonRef.current;
+    term.writeln(`\r\n\x1b[90m── ${path} ──\x1b[0m`);
     invoke("pty_kill").catch(() => {});
-    spawnPty(term, fit);
+    spawnTerminal(term, fit, path);
   }, [path, terminalOpen]);
+
+  // ── Helper ───────────────────────────────────────────────────────────────
+  async function spawnTerminal(term: XTerm, fit: FitAddon, spawnPath: string) {
+    cleanupListeners();
+    fit.fit();
+    spawnedPathRef.current = spawnPath;
+
+    const u1 = await listen<string>("pty://output", (e) => {
+      term.write(e.payload);
+    });
+    const u2 = await listen("pty://exit", () => {
+      term.writeln("\r\n\x1b[90m[Process exited]\x1b[0m");
+    });
+    unlistenRefs.current = [u1, u2];
+
+    try {
+      await invoke("pty_spawn", { path: spawnPath, cols: term.cols, rows: term.rows });
+    } catch (e) {
+      term.writeln(`\r\n\x1b[31m[Failed to start terminal: ${e}]\x1b[0m`);
+    }
+  }
 
   if (!terminalOpen) return null;
 
@@ -148,12 +149,8 @@ export function TerminalPanel() {
         </div>
       </div>
 
-      {/* xterm.js container */}
-      <div
-        ref={containerRef}
-        className="flex-1 overflow-hidden px-1 pt-1"
-        style={{ minHeight: 0 }}
-      />
+      {/* xterm.js */}
+      <div ref={containerRef} className="flex-1 overflow-hidden px-1 pt-1" style={{ minHeight: 0 }} />
     </div>
   );
 }

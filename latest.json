@@ -1,11 +1,11 @@
 {
-  "version": "1.0.11",
-  "notes": "v1.0.11 — Embedded terminal\n\n• Full embedded PowerShell terminal (xterm.js + Windows ConPTY)\n• Opens in the current folder automatically\n• Follows navigation — re-spawns when you change directories\n• Full colour output, 5000-line scrollback, clickable links\n• Pop-out button opens Windows Terminal at the same path\n• Fixed right-click context menu clipping at top of screen",
-  "pub_date": "2026-06-08T18:00:00Z",
+  "version": "1.0.12",
+  "notes": "v1.0.12 — Fix embedded terminal crash\n\n• Fixed powershell.exe 0xc0000142 crash — upgraded portable-pty to 0.9 which fixes the broken Windows ConPTY initialisation in 0.8\n• Fixed terminal spawning 3 times on open — consolidated React effects so PTY is only created once per session",
+  "pub_date": "2026-06-08T20:00:00Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlk2dldTbTI3RDd3NjZ3aVlWeTd4Ryt3RjFXNjdyOERxQ2syNk9QTVFPNXhtTU4xU3BIOWE2OUQ2N0xia1FvRlUxK0tiTnpJQUlseS96ZkoyNTJSNWdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTE5ODIzCWZpbGU6bm92YS1leHBsb3Jlci5leGUKaHAwNDBTTldCVHhzdzh1OVVLaHhiL3A0U1lFRnJzZ0QxbGpkNGtxQmZCTUd2VGFCMi90S09BSWdoUzRqWm9qM0pMQ1RaeS9KUWlnSWEyWDVpcVlWQlE9PQo=",
-      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.11/nova-explorer.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlp2dTVlb2hNeFV1Z3k3WDMrbEMvK3luYU45TFl1cll6TnlkdXpRUnNUZis0SnBJV09LQlA2aVltaEQvZjljRDlTQkl6bEdTck4vTldJVVNFc2FqYkFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTIwMzc5CWZpbGU6bm92YS1leHBsb3Jlci5leGUKakszU1EzV2puc0s5a3liUGsySWpUMHRiYS9JQng5SE5FS1h4MkIza0ZraVZIamdHNkFKVWg2a2Yzci9IaWhSMms0UlJ4Sm1PdHpRMUVraDhKSFhUQVE9PQo=",
+      "url": "https://github.com/krbxDev/nova-explorer/releases/download/v1.0.12/nova-explorer.exe"
     }
   }
 }
