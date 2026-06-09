@@ -50,6 +50,60 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
         shell: bash
 
+      - name: Locate build artifacts
+        id: artifacts
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          BUNDLE_DIR="src-tauri/target/release/bundle/nsis"
+
+          EXE="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.exe"
+          ZIP="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.nsis.zip"
+          SIG="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.nsis.zip.sig"
+
+          echo "EXE=$EXE" >> $GITHUB_OUTPUT
+          echo "ZIP=$ZIP" >> $GITHUB_OUTPUT
+          echo "SIG=$SIG" >> $GITHUB_OUTPUT
+
+          # Verify files exist
+          ls -lh "$BUNDLE_DIR/" || true
+
+      - name: Generate latest.json update manifest
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          TAG="${{ github.ref_name }}"
+          SIG_FILE="${{ steps.artifacts.outputs.SIG }}"
+          ZIP_NAME="KRB Explorer_${VERSION}_x64-setup.nsis.zip"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/${ZIP_NAME}"
+
+          # Read the signature file (created by Tauri's signing step)
+          if [ -f "$SIG_FILE" ]; then
+            SIGNATURE=$(cat "$SIG_FILE")
+          else
+            echo "WARNING: No .sig file found — updater won't be able to verify the download"
+            SIGNATURE=""
+          fi
+
+          PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          cat > latest.json <<EOF
+          {
+            "version": "${VERSION}",
+            "notes": "See the release page for full release notes.",
+            "pub_date": "${PUB_DATE}",
+            "platforms": {
+              "windows-x86_64": {
+                "signature": "${SIGNATURE}",
+                "url": "${DOWNLOAD_URL}"
+              }
+            }
+          }
+          EOF
+
+          echo "Generated latest.json:"
+          cat latest.json
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -58,4 +112,7 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            src-tauri/target/release/bundle/nsis/KRB Explorer_${{ steps.version.outputs.VERSION }}_x64-setup.exe
+            ${{ steps.artifacts.outputs.EXE }}
+            ${{ steps.artifacts.outputs.ZIP }}
+            ${{ steps.artifacts.outputs.SIG }}
+            latest.json
