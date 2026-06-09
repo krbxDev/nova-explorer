@@ -50,58 +50,52 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Locate build artifacts
+      - name: Locate build artifacts and generate latest.json
         id: artifacts
         shell: bash
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
+          TAG="${{ github.ref_name }}"
           BUNDLE_DIR="src-tauri/target/release/bundle/nsis"
 
-          EXE="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.exe"
-          ZIP="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.nsis.zip"
-          SIG="$BUNDLE_DIR/KRB Explorer_${VERSION}_x64-setup.nsis.zip.sig"
+          echo "=== NSIS bundle directory contents ==="
+          ls -lh "$BUNDLE_DIR/" || true
+
+          # Use glob to find the actual files regardless of spaces vs dots in product name
+          EXE=$(find "$BUNDLE_DIR" -name "*${VERSION}*x64-setup.exe" | head -1)
+          ZIP=$(find "$BUNDLE_DIR" -name "*${VERSION}*x64-setup.nsis.zip" | head -1)
+          SIG=$(find "$BUNDLE_DIR" -name "*${VERSION}*x64-setup.nsis.zip.sig" | head -1)
+
+          echo "EXE found: $EXE"
+          echo "ZIP found: $ZIP"
+          echo "SIG found: $SIG"
 
           echo "EXE=$EXE" >> $GITHUB_OUTPUT
           echo "ZIP=$ZIP" >> $GITHUB_OUTPUT
           echo "SIG=$SIG" >> $GITHUB_OUTPUT
 
-          # Verify files exist
-          ls -lh "$BUNDLE_DIR/" || true
-
-      - name: Generate latest.json update manifest
-        shell: bash
-        run: |
-          VERSION="${{ steps.version.outputs.VERSION }}"
-          TAG="${{ github.ref_name }}"
-          SIG_FILE="${{ steps.artifacts.outputs.SIG }}"
-          ZIP_NAME="KRB Explorer_${VERSION}_x64-setup.nsis.zip"
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/${ZIP_NAME}"
-
-          # Read the signature file (created by Tauri's signing step)
-          if [ -f "$SIG_FILE" ]; then
-            SIGNATURE=$(cat "$SIG_FILE")
+          # Read signature content
+          if [ -f "$SIG" ]; then
+            SIGNATURE=$(cat "$SIG")
+            echo "Signature found (${#SIGNATURE} chars)"
           else
-            echo "WARNING: No .sig file found — updater won't be able to verify the download"
             SIGNATURE=""
+            echo "WARNING: No .sig file found — updater signature will be empty"
           fi
+
+          # The download URL must match the filename that gets uploaded to the release.
+          # URL-encode spaces as %20 so the Tauri updater can download it.
+          ZIP_BASENAME=$(basename "$ZIP")
+          ZIP_BASENAME_ENCODED="${ZIP_BASENAME// /%20}"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/${ZIP_BASENAME_ENCODED}"
 
           PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-          cat > latest.json <<EOF
-          {
-            "version": "${VERSION}",
-            "notes": "See the release page for full release notes.",
-            "pub_date": "${PUB_DATE}",
-            "platforms": {
-              "windows-x86_64": {
-                "signature": "${SIGNATURE}",
-                "url": "${DOWNLOAD_URL}"
-              }
-            }
-          }
-          EOF
+          # Write latest.json — use printf to avoid heredoc indentation issues
+          printf '{\n  "version": "%s",\n  "notes": "See the release page for full release notes.",\n  "pub_date": "%s",\n  "platforms": {\n    "windows-x86_64": {\n      "signature": "%s",\n      "url": "%s"\n    }\n  }\n}\n' \
+            "$VERSION" "$PUB_DATE" "$SIGNATURE" "$DOWNLOAD_URL" > latest.json
 
-          echo "Generated latest.json:"
+          echo "=== Generated latest.json ==="
           cat latest.json
 
       - name: Create GitHub Release
