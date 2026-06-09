@@ -1,6 +1,6 @@
 {
   "productName": "KRB Explorer",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "identifier": "com.krb-explorer.app",
   "build": {
     "beforeDevCommand": "npm run dev",
