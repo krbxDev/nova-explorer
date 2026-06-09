@@ -82,10 +82,10 @@ jobs:
             echo "WARNING: No .sig file found — updater signature will be empty"
           fi
 
-          # URL-encode spaces so the Tauri updater can fetch the .exe
+          # GitHub releases replaces spaces with dots in uploaded asset filenames
           EXE_BASENAME=$(basename "$EXE")
-          EXE_BASENAME_ENCODED="${EXE_BASENAME// /%20}"
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/${EXE_BASENAME_ENCODED}"
+          EXE_BASENAME_DOTTED="${EXE_BASENAME// /.}"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/${EXE_BASENAME_DOTTED}"
 
           PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
