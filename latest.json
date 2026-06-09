@@ -1,11 +1,11 @@
 {
-  "version": "1.0.36",
-  "notes": "This PC as default home screen; right-click on This PC and Recycle Bin in sidebar; full sidebar in both split panes",
-  "pub_date": "2026-06-09T12:16:48Z",
+  "version": "1.0.37",
+  "notes": "proper right-click menus for This PC (map/disconnect drive, system properties) and Recycle Bin (empty, pin, properties)",
+  "pub_date": "2026-06-09T12:23:41Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlJldVhDOGtSVnRyYnoybFNsNDNSOUl2Q1JVZHpMcktNbHNWVFliRjd1ZHRPL3BTcHpXRTRKbHBLMkc3Q0txZUp3cEppWHhELzN0Tm51OElvQUludXd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxMDA3NDA4CWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zNl94NjQtc2V0dXAuZXhlCm0yMXFZMFJKL0dzN2RmcHVKTzQyRWVueU9BL0JIQ2xCMFRvMnI5T0QxOVVxUTRmeWtFVGdkU3NkblRhODNNWGw3RmlKcnpMaTZldU5Fc1R4ZGhCc0JRPT0K",
-      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.36/KRB.Explorer_1.0.36_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZmIzOVFYdWNhOVZxczQwREFPRkx2dk1jeG5jVTNMNmZCVUt1QTdHYitMR2hwSFU2bUIzSGVVZFBDYzJnWERiYXpScCtDZXlwaitQbzZmTUprOFFLZWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxMDA3ODIxCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zN194NjQtc2V0dXAuZXhlClF6a0hIbU5VY0tUVFRZMnJ0ZkNlOGk4UWJxd2ZkaFZnVS9tazBHRHFMYlBQeXhZckVTM1ZEZGFLWkFaT0ZUTW9tSExrWXBrMG1MeEZCZHdlSmtWTkF3PT0K",
+      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.37/KRB.Explorer_1.0.37_x64-setup.exe"
     }
   }
 }
