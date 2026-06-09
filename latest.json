@@ -1,11 +1,11 @@
 {
-  "version": "1.0.35",
-  "notes": "remove tab bar - split view is used instead",
-  "pub_date": "2026-06-08T23:26:31Z",
+  "version": "1.0.36",
+  "notes": "This PC as default home screen; right-click on This PC and Recycle Bin in sidebar; full sidebar in both split panes",
+  "pub_date": "2026-06-09T12:16:48Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlZyYnRvMzdCWndaY0J6RHF1d2s5MCtabE95YUVjUXJmOVFBYzRXWUFyWFgya1NuVzByVHR5cHdhSklxVCtJQkU5ZnJFRFA2aGZGR245WWJDZVYreUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgwOTYxMTkxCWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zNV94NjQtc2V0dXAuZXhlCndYMmUvam1LVlRZT0I5ejNPb0FVWEZVZ0hHTlhIUUJCY0l1UHFuVkNxVVJieFBRcnY4RmdyUGpqRnc3dmxDSHVwek00eFFGditTMHNpVExnanQ3bURnPT0K",
-      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.35/KRB.Explorer_1.0.35_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRMkVJNWlYTjdvZlJldVhDOGtSVnRyYnoybFNsNDNSOUl2Q1JVZHpMcktNbHNWVFliRjd1ZHRPL3BTcHpXRTRKbHBLMkc3Q0txZUp3cEppWHhELzN0Tm51OElvQUludXd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgxMDA3NDA4CWZpbGU6S1JCIEV4cGxvcmVyXzEuMC4zNl94NjQtc2V0dXAuZXhlCm0yMXFZMFJKL0dzN2RmcHVKTzQyRWVueU9BL0JIQ2xCMFRvMnI5T0QxOVVxUTRmeWtFVGdkU3NkblRhODNNWGw3RmlKcnpMaTZldU5Fc1R4ZGhCc0JRPT0K",
+      "url": "https://github.com/krbxDev/krb-explorer/releases/download/v1.0.36/KRB.Explorer_1.0.36_x64-setup.exe"
     }
   }
 }
