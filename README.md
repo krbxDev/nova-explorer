@@ -24,10 +24,18 @@ A fast, modern Windows file manager built with **Tauri 2 · Rust · React · Typ
 
 ## Download
 
-Get the latest installer from [Releases](https://github.com/krbxDev/krb-explorer/releases/latest).
+**[⬇ Download KRB Explorer v1.0.45](https://github.com/krbxDev/krb-explorer/releases/latest)**
+
+Or browse all releases on the [Releases page](https://github.com/krbxDev/krb-explorer/releases).
 
 > **Note — Windows Defender / antivirus warning**
 > KRB Explorer is not code-signed with a commercial certificate. Windows and some antivirus programs may flag the installer. See the sections below for how to allow it.
+
+---
+
+## Auto-Updates
+
+KRB Explorer checks for updates automatically on startup. When a new version is available, a notification will appear in the app — click it to download and install the update in the background. You can also check manually via **Help → Check for Updates**.
 
 ---
 
